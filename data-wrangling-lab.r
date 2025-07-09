@@ -61,3 +61,19 @@ superstore <- superstore %>%
 
 # Verify
 colSums(is.na(superstore))
+
+library(lubridate)
+
+# 3. Convert Order.Date to Date type (if it’s character in “mm/dd/yyyy” format)
+superstore <- superstore %>%
+  mutate(Order.Date = mdy(`Order.Date`)) %>%
+  
+  # 1. Create Profit_Margin
+  mutate(Profit_Margin = Profit / Sales) %>%
+  
+  # 2. Extract Order_Year
+  mutate(Order_Year = year(Order.Date))
+
+# Inspect the new columns
+head(superstore %>% 
+       select(, Order.Date, Profit, Sales, Profit_Margin, Order_Year))
