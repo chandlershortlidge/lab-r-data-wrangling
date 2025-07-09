@@ -77,3 +77,33 @@ superstore <- superstore %>%
 # Inspect the new columns
 head(superstore %>% 
        select(, Order.Date, Profit, Sales, Profit_Margin, Order_Year))
+
+# 1. Total sales and profit by Category
+category_summary <- superstore %>%
+  group_by(Category) %>%
+  summarize(
+    total_sales  = sum(Sales,  na.rm = TRUE),
+    total_profit = sum(Profit, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# 2. Average profit margin by Region
+region_margin <- superstore %>%
+  group_by(Region) %>%
+  summarize(
+    avg_profit_margin = mean(Profit / Sales, na.rm = TRUE) * 100,
+    .groups = "drop"
+  )
+
+# 3. Count of orders by Customer Segment
+orders_by_segment <- superstore %>%
+  group_by(Segment) %>%
+  summarize(
+    order_count = n(),
+    .groups = "drop"
+  )
+
+# Inspect results
+category_summary
+region_margin
+orders_by_segment       
