@@ -32,3 +32,32 @@ df_step2 <- df_step2 %>%
 
   # Inspect the result
 head(df_step2)
+
+# 1. Check for missing values
+missing_counts <- colSums(is.na(superstore))
+print(missing_counts)
+
+# 2. Replace missing Postal.Code with the mode
+#   a) Compute the mode of Postal.Code
+mode_postal <- superstore %>%
+  filter(!is.na(Postal.Code)) %>%
+  count(Postal.Code) %>%
+  arrange(desc(n)) %>%
+  slice(1) %>%
+  pull(Postal.Code)
+
+  #   b) Fill NAs with that mode
+superstore <- superstore %>%
+  mutate(
+    Postal.Code = ifelse(
+      is.na(Postal.Code),
+      mode_postal,
+      Postal.Code
+    )
+  )
+# 3. Remove rows with missing Customer.Name
+superstore <- superstore %>%
+  filter(!is.na(Customer.Name) & Customer.Name != "")
+
+# Verify
+colSums(is.na(superstore))
